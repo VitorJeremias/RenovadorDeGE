@@ -10,7 +10,9 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -28,19 +30,42 @@ public class Acoes {
 		botaoJogar(acc);
 		botaoHoundsmoor(acc);
 		fecharJanela(acc);
-		Amigos(acc);
-		topAmigos(acc);
-		vitorMonticelli(acc);
-		grandesEdificios(acc);
-		atividade(acc);
-		abrirAleatorio();
-		mouseNeutro();
-		todaABarra(acc);
-		fecharJanela(acc);
-		fecharJanela(acc);
+		if (temPF(acc)) {
+			Amigos(acc);
+			topAmigos(acc);
+			vitorMonticelli(acc);
+			grandesEdificios(acc);
+			atividade(acc);
+			abrirAleatorio();
+			mouseNeutro();
+			todaABarra(acc);
+			fecharJanela(acc);
+			fecharJanela(acc);
+		} else {
+			listaContasSemUsarPF.add(acc);
+			System.err.println(acc + " Adicionado na lista");
+			escreverNoArquivo(acc);
+		}
 		logout(acc);
 		sair(acc);
 		sair2(acc);
+	}
+
+	public static void limparArquivo() throws IOException {
+		@SuppressWarnings("resource")
+		BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Vitor\\Downloads\\PrintsFOE\\accsSemGE.txt"));
+		writer.write("");
+	}
+
+	public static void escreverNoArquivo(String acc) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Vitor\\Downloads\\PrintsFOE\\accsSemGE.txt", true));
+		writer.append(acc + "\n");
+		writer.close();
+
+	}
+
+	public static boolean temPF(String acc) throws HeadlessException, AWTException, IOException {
+		return esperarImagemComLimite(EnumImagens.TEM_1_PF, acc);
 	}
 
 	public static void mouseNeutro() throws AWTException {
@@ -54,7 +79,7 @@ public class Acoes {
 		Point b = a.getLocation();
 		int x = (int) b.getX();
 		int y = (int) b.getY();
-		InputManager.clicker.mouseMove(x, y + random(29, 6)); // Clica no Abrir de um dos 6 primeiros GEs aleatoriamente
+		InputManager.clicker.mouseMove(x, y + random(29, 3)); // Clica no Abrir de um dos n-1 primeiros GEs aleatoriamente
 		InputManager.clicker.mousePress(MouseEvent.BUTTON1_DOWN_MASK);
 		InputManager.clicker.delay(20);
 		InputManager.clicker.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK);
@@ -65,6 +90,7 @@ public class Acoes {
 		do {
 			valor = new Random().nextInt(multiple) * range;
 		} while (valor == 0);
+		System.out.println("GE Nº " + valor / range);
 		return valor;
 	}
 
@@ -150,49 +176,6 @@ public class Acoes {
 		System.out.println(segundos);
 	}
 
-	public static boolean esperarImagem(BufferedImage bi, String acao, String acc) throws HeadlessException, AWTException {
-		System.out.println("Procurando imagem " + acao);
-		boolean achou = false;
-		boolean fail = true;
-		while (achou == false) {
-			BufferedImage image = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-			for (int x = 0; x < image.getWidth(); x++) {
-				for (int y = 0; y < image.getHeight(); y++) {
-					if (!achou) {
-						boolean invalid = false;
-						int k = x, l = y;
-						for (int a = 0; a < bi.getWidth(); a++) {
-							l = y;
-							for (int b = 0; b < bi.getHeight(); b++) {
-								if (bi.getRGB(a, b) != image.getRGB(k, l)) {
-									invalid = true;
-									break;
-								} else {
-									l++;
-								}
-							}
-							if (invalid) {
-								break;
-							} else {
-								k++;
-							}
-						}
-						if (!invalid) {
-							achou = true;
-							System.out.println(acao + ": Achou! " + " " + acc);
-							fail = false;
-						}
-					}
-				}
-			}
-		}
-		if (fail) {
-			System.out.println(acao + ": Nao achou! " + acc);
-			achou = false;
-		}
-		return achou;
-	}
-
 	public static boolean esperarImagemComLimite(EnumImagens imagem, String acc) throws HeadlessException, AWTException, IOException {
 		BufferedImage bi = ImageIO.read(new File(imagem.getPath()));
 		boolean achou = false;
@@ -238,53 +221,8 @@ public class Acoes {
 		return achou;
 	}
 
-	public static void acharImagem(BufferedImage bi, double widthMult, double heigthMult, int maxCount, String acao, String acc) throws HeadlessException, AWTException {
-		Robot clicker = new Robot();
-		boolean achou = false;
-		boolean fail = true;
-		int count = 0;
-		while (achou == false && count < maxCount) {
-			BufferedImage image = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-			for (int x = 0; x < image.getWidth(); x++) {
-				for (int y = 0; y < image.getHeight(); y++) {
-					if (!achou) {
-						boolean invalid = false;
-						int k = x, l = y;
-						for (int a = 0; a < bi.getWidth(); a++) {
-							l = y;
-							for (int b = 0; b < bi.getHeight(); b++) {
-								if (bi.getRGB(a, b) != image.getRGB(k, l)) {
-									invalid = true;
-									break;
-								} else {
-									l++;
-								}
-							}
-							if (invalid) {
-								break;
-							} else {
-								k++;
-							}
-						}
-						if (!invalid) {
-							clicker.mouseMove((int) k - (int) (bi.getWidth() * widthMult), (int) l - (int) (bi.getHeight() * heigthMult));
-							// clickEvent(k - (bi.getWidth() * widthMult), l - (bi.getHeight()
-							// *heigthMult)); // Clica no centro do objeto
-							achou = true;
-							System.out.println(acao + ": OK! " + " " + acc);
-							fail = false;
-						}
-					}
-				}
-			}
-			count++;
-		}
-		if (fail) {
-			System.out.println(acao + ": FAIL! " + acc);
-		}
-	}
-
-	public static void compararPixels(BufferedImage bi, double widthMult, double heigthMult, int maxCount, String acao, String acc) throws HeadlessException, AWTException {
+	public static void acharImagem(EnumImagens imagem, double widthMult, double heigthMult, int maxCount, String acc) throws HeadlessException, AWTException, IOException {
+		BufferedImage bi = ImageIO.read(new File(imagem.getPath()));
 		boolean achou = false;
 		boolean fail = true;
 		int count = 0;
@@ -314,7 +252,7 @@ public class Acoes {
 						if (!invalid) {
 							InputManager.clickEvent(k - (bi.getWidth() * widthMult), l - (bi.getHeight() * heigthMult)); // Clica no centro do objeto
 							achou = true;
-							System.out.println(acao + ": OK! " + " " + acc);
+							System.out.println(imagem.getAcao() + ": OK! " + " " + acc);
 							fail = false;
 						}
 					}
@@ -323,13 +261,12 @@ public class Acoes {
 			count++;
 		}
 		if (fail) {
-			System.out.println(acao + ": FAIL! " + acc);
+			System.out.println(imagem.getAcao() + ": FAIL! " + acc);
 		}
 	}
 
 	public static void compararImagens(EnumImagens imagem, String acc) throws HeadlessException, AWTException, IOException {
-		BufferedImage bi = ImageIO.read(new File(imagem.getPath()));
-		compararPixels(bi, imagem.getParametrosDaImagem().getWidthMult(), imagem.getParametrosDaImagem().getHeigthMult(), imagem.getParametrosDaImagem().getMaxCount(), imagem.getAcao(), acc);
+		acharImagem(imagem, imagem.getParametrosDaImagem().getWidthMult(), imagem.getParametrosDaImagem().getHeigthMult(), imagem.getParametrosDaImagem().getMaxCount(), acc);
 	}
 
 }
