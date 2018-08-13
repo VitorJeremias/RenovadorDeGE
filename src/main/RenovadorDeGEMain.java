@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import modelo.Acoes;
+import utils.StringConstants;
 
 public class RenovadorDeGEMain {
+	public static final int qtdGE = 4;
 	private static ArrayList<String> accs = new ArrayList<String>();
 
 	public static void main(String[] args) throws IOException, AWTException, InterruptedException {
@@ -32,7 +34,7 @@ public class RenovadorDeGEMain {
 		// }
 		// System.err.println(accs);
 
-		try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Vitor\\Downloads\\PrintsFOE\\accsSemGE.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(StringConstants.pathPrincipal + "accsSemGE.txt"))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				accs.add(line);

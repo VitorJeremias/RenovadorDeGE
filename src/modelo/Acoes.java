@@ -19,6 +19,9 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import main.RenovadorDeGEMain;
+import utils.StringConstants;
+
 public class Acoes {
 	public static ArrayList<String> listaContasSemUsarPF = new ArrayList<String>();
 	public static final Random random = new Random(System.currentTimeMillis());
@@ -36,7 +39,7 @@ public class Acoes {
 			vitorMonticelli(acc);
 			grandesEdificios(acc);
 			atividade(acc);
-			abrirAleatorio();
+			abrirAleatorio(RenovadorDeGEMain.qtdGE);
 			mouseNeutro();
 			todaABarra(acc);
 			fecharJanela(acc);
@@ -53,12 +56,12 @@ public class Acoes {
 
 	public static void limparArquivo() throws IOException {
 		@SuppressWarnings("resource")
-		BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Vitor\\Downloads\\PrintsFOE\\accsSemGE.txt"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(StringConstants.pathPrincipal + "accsSemGE.txt"));
 		writer.write("");
 	}
 
 	public static void escreverNoArquivo(String acc) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Vitor\\Downloads\\PrintsFOE\\accsSemGE.txt", true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(StringConstants.pathPrincipal + "accsSemGE.txt", true));
 		writer.append(acc + "\n");
 		writer.close();
 
@@ -73,13 +76,13 @@ public class Acoes {
 		InputManager.clicker.mouseMove(0, 0);
 	}
 
-	public static void abrirAleatorio() throws AWTException {
+	public static void abrirAleatorio(int qtdGE) throws AWTException {
 		InputManager.clicker = new Robot();
 		PointerInfo a = MouseInfo.getPointerInfo();
 		Point b = a.getLocation();
 		int x = (int) b.getX();
 		int y = (int) b.getY();
-		InputManager.clicker.mouseMove(x, y + random(29, 3)); // Clica no Abrir de um dos n-1 primeiros GEs aleatoriamente
+		InputManager.clicker.mouseMove(x, y + random(29, qtdGE + 1)); // Clica no Abrir de um dos n primeiros GEs aleatoriamente
 		InputManager.clicker.mousePress(MouseEvent.BUTTON1_DOWN_MASK);
 		InputManager.clicker.delay(20);
 		InputManager.clicker.mouseRelease(MouseEvent.BUTTON1_DOWN_MASK);

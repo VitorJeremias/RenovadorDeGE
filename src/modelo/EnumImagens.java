@@ -47,7 +47,7 @@ public enum EnumImagens {
 	HOUNDSMOOR(StringConstants.pathPrincipal + "houndsmoor.png", EnumParametrosImagem.CENTRALIZADO_30, "Houndsmoor"),	
 	JOGAR(StringConstants.pathPrincipal + "jogar.png",EnumParametrosImagem.CENTRALIZADO_30, "Jogar"),	
 	LOGIN(StringConstants.pathPrincipal + "login.png",EnumParametrosImagem.CENTRALIZADO_30, "Login"),	
-	LOGOUT(StringConstants.pathPrincipal + "logout.png",EnumParametrosImagem.CENTRALIZADO_30, "Logout"),	
+	LOGOUT(StringConstants.pathPrincipal + "logout.png",EnumParametrosImagem.FORA_DIREITA_30, "Logout"),	
 	NOTICIAS(StringConstants.pathPrincipal + "noticias.png",EnumParametrosImagem.CENTRALIZADO_30, "Noticias"),	
 	SAIR(StringConstants.pathPrincipal + "sair.png",EnumParametrosImagem.CENTRALIZADO_30, "Sair"),	
 	SAIR2(StringConstants.pathPrincipal + "sair2.png",EnumParametrosImagem.CENTRALIZADO_30, "Sair2"),
